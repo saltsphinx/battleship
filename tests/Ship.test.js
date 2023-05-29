@@ -11,6 +11,11 @@ it('increments hits from 0 to 1', () => {
   expect(testShip.hits).toBe(1);
 });
 
+it('throws error if length is less than 1, more than 4', () => {
+  expect(() => Ship(0)).toThrow();
+  expect(() => Ship(5)).toThrow();
+});
+
 it('detects if ship has sunken', () => {
   const testShip = Ship(1);
 
