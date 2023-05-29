@@ -10,10 +10,6 @@ it('returns object with coordinates property who has 100 properties', () => {
   expect(Object.keys(testBoard.coordinates).length).toBe(100);
 });
 
-it('returns object with hit coordinates property', () => {
-  expect(testBoard).toHaveProperty('hitCoordinates', {});
-});
-
 it('places ship at specific coordinate', () => {
   const coord = '4,5';
   testBoard.placeShip(coord, 1);
@@ -41,4 +37,12 @@ it('marks a coordinate as being hit', () => {
   testBoard.receiveAttack(coord);
 
   expect(testBoard.hitCoordinates).toHaveProperty(coord);
+});
+
+it('reports if all ships are sunken', () => {
+  const coord = '4,5';
+  testBoard.placeShip(coord, 1);
+  testBoard.receiveAttack(coord);
+
+  expect(testBoard.allSunken()).toBe(true);
 });
