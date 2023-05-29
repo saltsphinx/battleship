@@ -23,8 +23,22 @@ it('places ship at specific coordinate', () => {
 
 it('returns false if corodinate is taken', () => {
   testBoard.placeShip('4,5', 1);
+
+  expect(testBoard.placeShip('4,5', 1)).toBe(false);
 });
 
 it('requires parameters for placeShip', () => {
   expect(() => testBoard.placeShip()).toThrow();
+});
+
+it('returns false if ship isn\'t at coordinate', () => {
+  expect(testBoard.receiveAttack('4,5')).toBe(false);
+});
+
+it('marks a coordinate as being hit', () => {
+  const coord = '4,5';
+  testBoard.placeShip(coord, 1);
+  testBoard.receiveAttack(coord);
+
+  expect(testBoard.hitCoordinates).toHaveProperty(coord);
 });

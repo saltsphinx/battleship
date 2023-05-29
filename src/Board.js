@@ -20,8 +20,19 @@ function Board() {
 
   function placeShip(coord, length) {
     if(!(typeof coord == 'string') || !(typeof length == 'number')) throw new Error('Both parameters must be passed, string and number');
+    if (coordinates[coord]) return false;
 
     coordinates[coord] = Ship(length);
+  }
+
+  function receiveAttack(coord) {
+    if(!(typeof coord == 'string')) throw new Error('parameter must be a string');
+
+    const spot = coordinates[coord];
+    if (!spot) return false;
+
+    spot.hit()
+    hitCoordinates[coord] = true;
   }
 
   for (let i = 0; i < 10; i++) {
@@ -34,6 +45,7 @@ function Board() {
     coordinates,
     hitCoordinates,
     placeShip,
+    receiveAttack,
   }
 }
 
