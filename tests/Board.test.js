@@ -42,6 +42,8 @@ it('marks a coordinate as being hit', () => {
 it('reports if all ships are sunken', () => {
   const coord = '4,5';
   testBoard.placeShip(coord, 1);
+  expect(testBoard.allSunken()).toBe(false);
+
   testBoard.receiveAttack(coord);
 
   expect(testBoard.allSunken()).toBe(true);
