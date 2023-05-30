@@ -6,11 +6,11 @@ function Ship(length) {
 
   const hit = function hit() {
     this.hits++;
-  }
+  };
 
   const isSunk = function isSunk() {
     return this.hits >= this.length;
-  }
+  };
 
   return {
     length,
