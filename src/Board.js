@@ -1,13 +1,20 @@
 const Ship = require("./Ship");
 
 function Board() {
+  // change coordinates variable to ships.
+  // ships will hold objects who records direction, length and coordinates
+  // makes removal of ships easy and easy tracking of them
   const coordinates = {};
   const hitCoordinates = {};
   let shipCount = 0;
   let hits = 0;
 
   function placeShip(coord, length) {
-    if(!(typeof coord == 'string') || !(typeof length == 'number')) throw new Error('Both parameters must be passed, string and number');
+    // takes cord, length and direction params
+    // checks if coord and all coords in direction are are avaliable and in bounds, if not, return false
+    // create Ship object
+    // same Ship object on all coords
+    // adds Ship to ships property
     if (coordinates[coord]) return false;
 
     coordinates[coord] = Ship(length);

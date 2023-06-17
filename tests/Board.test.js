@@ -23,10 +23,6 @@ it('returns false if corodinate is taken', () => {
   expect(testBoard.placeShip('4,5', 1)).toBe(false);
 });
 
-it('requires parameters for placeShip', () => {
-  expect(() => testBoard.placeShip()).toThrow();
-});
-
 it('returns false if ship isn\'t at coordinate', () => {
   expect(testBoard.receiveAttack('4,5')).toBe(false);
 });
