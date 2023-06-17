@@ -8,9 +8,34 @@ const Player = require('./Player');
 // ships can be touching but can not overlap
 // ships must be within bounds of the board
 
+const shipSizes = [5, 4, 2, 2, 1];
+const directions = ['right', 'bottom'];
+
 function init() {
   this.player1 = Player();
   this.player0 = Player();
+
+  randomPositions(this.player0);
+  randomPositions(this.player1);
+}
+
+function randomPositions(player) {
+  const board = player.board;
+
+  shipSizes.forEach(length => {
+    const direction = directions[Math.floor(Math.random() * 2)]
+    let result = board.placeShip(randomCoord(), length, direction);
+
+    while (result === false) {
+      result = board.placeShip(randomCoord(), length, direction); 
+    }
+  });
+}
+
+function randomCoord() {
+  const [x, y] = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+
+  return [x, y].toString();
 }
 
 module.exports = {

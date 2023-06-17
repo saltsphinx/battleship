@@ -1,39 +1,59 @@
 const Ship = require("./Ship");
 
 function Board() {
-  // change coordinates variable to ships.
-  // ships will hold objects who records direction, length and coordinates
-  // makes removal of ships easy and easy tracking of them
   const coordinates = {};
   const hitCoordinates = {};
+  const ships = {};
   let shipCount = 0;
   let hits = 0;
 
-  function placeShip(coord, length) {
-    // takes cord, length and direction params
-    // checks if coord and all coords in direction are are avaliable and in bounds, if not, return false
-    // create Ship object
-    // same Ship object on all coords
-    // adds Ship to ships property
-    if (coordinates[coord]) return false;
+  function placeShip(coord, length, direction) {
+    const coords = generateCoordinates(coord, length, direction);
+    if (!coords) return false;
 
-    coordinates[coord] = Ship(length);
-    shipCount++;
+    const ship = Ship(length, coords, direction);
+    coords.forEach(coord => coordinates[coord] = ship);
+
+    ships[coord] = ship;
+    shipCount += length;
   }
 
   function receiveAttack(coord) {
-    if(!(typeof coord == 'string')) throw new Error('parameter must be a string');
+    if (!(typeof coord == 'string')) throw new Error('parameter must be a string');
+    if (hitCoordinates[coord]) return false;
+    hitCoordinates[coord] = true;
 
     const spot = coordinates[coord];
-    if (!spot) return false;
-
-    spot.hit()
-    hitCoordinates[coord] = true;
-    hits++;
+    if (spot) {
+      spot.hit()
+      hits++;
+      return 'hit';
+    }
+    else {
+      return 'miss';
+    }
   }
 
   function allSunken() {
     return hits >= shipCount;
+  }
+
+  function generateCoordinates(coord, length, direction) {
+    if (coordinates[coord]) return false;
+
+    const coords = [coord];
+    const coordArr = coord.split(',').map(str => +str);
+    const i = direction == 'right' ? 0 : 1;
+
+    for (let n = 0; n < length - 1; n++) {
+      coordArr[i] = coordArr[i] + 1;
+      if (coordinates[coordArr]) return false;
+      if (coordArr[0] < 0 || coordArr[0] > 9 || coordArr[1] < 0 || coordArr[1] > 9) return false;
+
+      coords.push(Array.from(coordArr).toString());
+    }
+
+    return coords;
   }
 
   for (let i = 0; i < 10; i++) {
@@ -48,6 +68,7 @@ function Board() {
     placeShip,
     receiveAttack,
     allSunken,
+    generateCoordinates,
   }
 }
 
