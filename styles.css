@@ -1,0 +1,38 @@
+:root {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  user-select: none;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+header {
+  margin-bottom: 4rem;
+}
+
+main {
+  display: flex;
+  gap: 4rem;
+}
+
+.client {
+  margin: 0 2rem;
+}
+
+.grid {
+  display: grid;
+  grid-template: repeat(10, 2rem) / repeat(10, 2rem);
+}
+
+.grid-coordinate {
+  border: 1px solid rgb(209, 217, 255);
+}
