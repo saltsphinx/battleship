@@ -1,8 +1,11 @@
 const Board = require('./Board');
 
 function Player() {
+  const board = Board();
+
   return {
-    board: Board(),
+    board,
+    ships: board.ships
   };
 };
 

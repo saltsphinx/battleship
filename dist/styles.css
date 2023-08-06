@@ -28,6 +28,20 @@ main {
   margin: 0 2rem;
 }
 
+.notifier {
+  transition: top 300ms ease-in-out;
+  top: 0;
+  position: absolute;
+  color: #fff;
+  background: rgb(255, 168, 69);
+  width: 100%;
+  text-align: center;
+}
+
+.hide {
+  top: -20px;
+}
+
 .grid {
   display: grid;
   grid-template: repeat(10, 2rem) / repeat(10, 2rem);
@@ -35,4 +49,39 @@ main {
 
 .grid-coordinate {
   border: 1px solid rgb(209, 217, 255);
+}
+
+.ai-grid .grid-coordinate {
+  cursor: pointer;
+}
+
+.ship {
+  border: 2px solid rgb(205, 213, 252);
+  background: rgb(194, 203, 248);
+}
+
+.right {
+  border-top: 3px solid rgb(100, 126, 255);
+  border-bottom: 3px solid rgb(100, 126, 255);
+}
+
+.bottom {
+  border-left: 3px solid rgb(100, 126, 255);
+  border-right: 3px solid rgb(100, 126, 255);
+}
+
+.right.first {
+  border-left: 3px solid rgb(100, 126, 255);
+}
+
+.right.last {
+  border-right: 3px solid rgb(100, 126, 255);
+}
+
+.bottom.first {
+  border-top: 3px solid rgb(100, 126, 255);
+}
+
+.bottom.last {
+  border-bottom: 3px solid rgb(100, 126, 255);
 }

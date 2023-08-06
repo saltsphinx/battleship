@@ -43,7 +43,7 @@ function Board() {
 
     const coords = [coord];
     const coordArr = coord.split(',').map(str => +str);
-    const i = direction == 'right' ? 0 : 1;
+    const i = direction == 'right' ? 1 : 0;
 
     for (let n = 0; n < length - 1; n++) {
       coordArr[i] = coordArr[i] + 1;
@@ -63,6 +63,7 @@ function Board() {
   }
 
   return {
+    ships,
     coordinates,
     hitCoordinates,
     placeShip,
