@@ -3,7 +3,7 @@ const playerGrid = {};
 const aiGrid = {};
 const grids = [playerGrid, aiGrid];
 const notifier = document.querySelector('.notifier');
-let contNote;
+let contNoti;
 let timeoutId;
 
 function setupGrids() {
@@ -43,12 +43,12 @@ function setupEnemy(cb) {
 }
 
 function hitNotifier(msg, time = 6500) {
-  if (contNote) {
-    contNote(true);
+  if (contNoti) {
+    contNoti(true);
     clearTimeout(timeoutId);
   }
 
-  const continuePromise = new Promise((resolve) => contNote = resolve);
+  const continuePromise = new Promise((resolve) => contNoti = resolve);
   notifier.textContent = msg;
 
   notifier.classList.remove('hide')
@@ -59,14 +59,42 @@ function hitNotifier(msg, time = 6500) {
 
 function timeoutPromise(delay) {
   return new Promise((resolve) => {
-    timeoutId = setTimeout(() => resolve(false), delay)
+    timeoutId = setTimeout(() => resolve(false), delay);
   })
+}
+
+function renderAttack(square, result) {
+  switch (result) {
+    case 'miss':
+      hitNotifier('The attack missed');
+      square.classList.add('miss');
+      break;
+    case 'hit':
+      hitNotifier('The attack hit');
+      square.classList.add('hit');
+      break;
+  }
+}
+
+function swapOpacity(other) {
+  if (other == 'player') {
+    gridDivs[0].classList.add('dim');
+    gridDivs[1].classList.remove('dim');
+  } else if (other == 'ai') {
+    gridDivs[1].classList.add('dim');
+    gridDivs[0].classList.remove('dim');
+  } else {
+    gridDivs[0].classList.remove('dim');
+    gridDivs[1].classList.remove('dim');
+  }
 }
 
 module.exports = {
   resetGrids,
   setupEnemy,
   hitNotifier,
+  renderAttack,
+  swapOpacity,
   playerGrid,
   aiGrid,
 }

@@ -1,5 +1,7 @@
 const Dom = require('./Dom');
 const Player = require('./Player');
+let player;
+let ai;
 let canAttack = false;
 // will include methods for placing ship
 // ship sizes will be predetermined
@@ -18,23 +20,24 @@ const shipSizes = [5, 4, 2, 2, 1];
 const directions = ['right', 'bottom'];
 
 function init() {
-  this.player = Player();
-  this.ai = Player();
+  player = Player();
+  ai = Player();
 
-  randomPositions(this.player);
-  randomPositions(this.ai);
+  randomPositions(player.board);
+  randomPositions(ai.board);
 
   Dom.resetGrids();
-  displayShips(this.player);
+  displayShips('player', player.ships);
+  // displayShips('ai', ai.ships);
 
   Dom.setupEnemy(attackLoop);
-  Dom.hitNotifier('Your turn', 15000);
+  Dom.hitNotifier('Your turn', 7500);
+  Dom.swapOpacity('player');
   canAttack = true;
+  console.log(1);
 }
 
-function randomPositions(other) {
-  const board = other.board;
-
+function randomPositions(board) {
   shipSizes.forEach(length => {
     const direction = directions[Math.floor(Math.random() * 2)]
     let result = board.placeShip(randomCoord(), length, direction);
@@ -51,12 +54,10 @@ function randomCoord() {
   return [x, y].toString();
 }
 
-
 // should seperate rendering from this method
 // would allow for displaying individual ships when rotated or dragged and dropped
-function displayShips(other) {
-  const grid = Dom.playerGrid;
-  const ships = other.ships;
+function displayShips(other, ships) {
+  const grid = Dom[other == 'player' ? 'playerGrid' : 'aiGrid'];
 
   Object.values(ships).forEach((ship) => {
     const coords = ship.coords;
@@ -71,23 +72,86 @@ function displayShips(other) {
   });
 }
 
-function attackLoop(e) {
+async function attackLoop(e) {
   if (!canAttack) return;
 
   const square = e.target;
   if (!square.classList.contains('grid-coordinate')) return;
-  if (square.classList.contains('hit')) return Dom.hitNotifier('Square has already been attacked.', 2500);
-
+  
+  const aiBoard = ai.board;
   const coord = square.classList[1];
-  console.log('is square: ' + square.classList[1]);
+  const result = aiBoard.receiveAttack(coord);
+  if (result == false) return Dom.hitNotifier('Square has already been attacked', 1250);
 
+  canAttack = false;
+  Dom.renderAttack(square, result);
+  if (result == 'hit') {
+    if (aiBoard.allSunken()) return endGame('player');
+
+    canAttack = true;
+    return;
+  }
+
+  await timeoutPromise(1250);
+  Dom.swapOpacity('ai');
+  if (await attackPlayer()) {
+    endGame('ai');
+    return;
+  }
+
+  canAttack = true;
+  Dom.swapOpacity('player');
+  Dom.hitNotifier('Your turn', 2000);
 }
 
-function attackOther(other, coord) {
-  const board = other.board;
-  const result = board.receiveAttack(coord);
+ async function attackPlayer() {
+  const playerBoard = player.board;
+  let coord = getPlayerCoord();
+  let square = Dom.playerGrid[coord];
+  await timeoutPromise(500);
+
+  let result = playerBoard.receiveAttack(coord);
+  while (result == 'hit') {
+    Dom.hitNotifier('The AI hits');
+    Dom.renderAttack(square, result);
+    if (playerBoard.allSunken()) return true;
+
+    await timeoutPromise(1250)
+    coord = getPlayerCoord();
+    square = Dom.playerGrid[coord];
+    result = playerBoard.receiveAttack(coord);
+  }
+  Dom.renderAttack(square, result);
+  Dom.hitNotifier('The AI misses');
+  await timeoutPromise(1250);
+}
+
+function getPlayerCoord() {
+  let coord = randomCoord();
+  const playerBoard = player.board;
+
+  while (playerBoard.hitCoordinates[coord]) {
+    coord = randomCoord();
+  }
+
+  return coord;
+}
+
+function endGame(winner) {
+  Dom.swapOpacity();
+  if (winner == 'player') {
+    Dom.hitNotifier('You win!');
+  } else {
+    Dom.hitNotifier('The AI wins!');
+  }
+}
+
+function timeoutPromise(delay) {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), delay);
+  })
 }
 
 module.exports = {
   init,
-}
+};
