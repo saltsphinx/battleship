@@ -85,3 +85,21 @@ main {
 .bottom.last {
   border-bottom: 3px solid rgb(100, 126, 255);
 }
+
+.hit {
+  border-color: red;
+}
+
+.dim {
+  opacity: 0.5;
+}
+
+.miss {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.miss::after {
+  content: '•';
+}
